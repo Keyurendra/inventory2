@@ -9,9 +9,12 @@ import (
 type OptFunc func(*opts)
 
 type opts struct {
-	timeout          time.Duration
-	cacheDir         string
-	useExternalTrivy bool
+	timeout            time.Duration
+	cacheDir           string
+	useExternalTrivy   bool
+	packageInventory   bool
+	inventoryLockfiles bool
+	skipDirs           []string
 }
 
 func WithTimeout(timeout time.Duration) OptFunc {
@@ -29,6 +32,24 @@ func WithCacheDirectory(cacheDir string) OptFunc {
 func WithExternalTrivy() OptFunc {
 	return func(o *opts) {
 		o.useExternalTrivy = true
+	}
+}
+
+func WithPackageInventory() OptFunc {
+	return func(o *opts) {
+		o.packageInventory = true
+	}
+}
+
+func WithPackageInventoryLockfiles() OptFunc {
+	return func(o *opts) {
+		o.inventoryLockfiles = true
+	}
+}
+
+func WithSkipDirectories(paths ...string) OptFunc {
+	return func(o *opts) {
+		o.skipDirs = append(o.skipDirs, paths...)
 	}
 }
 
